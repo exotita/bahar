@@ -1,0 +1,675 @@
+# Bahar Project - Cursor Rules
+
+## Project Overview
+
+**Bahar** is a multilingual emotion and linguistic analysis system combining:
+- GoEmotions sentiment analysis (28 fine-grained emotions)
+- Linguistic dimensions (formality, tone, intensity, communication style)
+- Support for English, Dutch, Persian, and extensible to other languages
+- Beautiful terminal output using Rich library
+
+**Version:** 0.2.0
+**Python:** 3.12+
+**License:** MIT
+
+## Project Structure
+
+```
+bahar/
+├── bahar/                          # Main package
+│   ├── __init__.py                 # Package exports (EmotionAnalyzer, EnhancedAnalyzer, LinguisticAnalyzer)
+│   ├── datasets/                   # Dataset modules (extensible)
+│   │   ├── goemotions/             # GoEmotions implementation
+│   │   │   ├── taxonomy.py         # 28 emotion definitions
+│   │   │   ├── classifier.py       # GoEmotionsClassifier
+│   │   │   ├── result.py           # EmotionResult + formatters
+│   │   │   └── samples.py          # Sample texts (16 texts)
+│   │   └── [future_dataset]/       # Add new datasets here
+│   ├── analyzers/                  # Analysis modules
+│   │   ├── emotion_analyzer.py     # Unified EmotionAnalyzer (dataset-agnostic)
+│   │   ├── linguistic_analyzer.py  # LinguisticAnalyzer (rule-based)
+│   │   ├── linguistic_samples.py   # 48 multilingual samples (16 categories)
+│   │   └── enhanced_analyzer.py    # EnhancedAnalyzer (emotion + linguistics)
+│   ├── cli/                        # Command-line tools
+│   │   ├── classify_basic.py       # Basic emotion classification
+│   │   ├── classify_enhanced.py    # Enhanced analysis
+│   │   └── test_categories.py      # Category testing
+│   ├── demos/                      # Demo scripts
+│   │   ├── demo_basic.py           # Basic demo
+│   │   └── demo_enhanced.py        # Enhanced demo
+│   └── utils/                      # Utility functions
+│       ├── __init__.py
+│       └── rich_output.py          # Rich formatting utilities
+├── docs/                           # Documentation
+│   ├── README.md                   # Documentation index
+│   ├── DEVELOPMENT.md              # Development guide
+│   ├── goemotions/                 # GoEmotions dataset docs
+│   │   ├── README.md               # Overview
+│   │   ├── taxonomy.md             # Detailed taxonomy
+│   │   └── usage.md                # Usage examples
+│   ├── guides/                     # User guides and project history
+│   │   ├── quick-start.md          # Quick start guide
+│   │   ├── installation.md         # Installation instructions
+│   │   ├── linguistic-analysis.md  # Linguistic analysis guide
+│   │   ├── rich-output.md          # Rich formatting guide
+│   │   ├── adding-datasets.md      # Dataset extension guide
+│   │   ├── cursor-setup.md         # Cursor AI setup verification
+│   │   ├── migration.md            # Migration guide
+│   │   ├── migration-complete.md   # Migration summary
+│   │   ├── restructure-guide.md    # Restructure details
+│   │   ├── restructure-summary.md  # Restructure summary
+│   │   ├── enhancement-summary.md  # Enhancement history
+│   │   └── implementation-summary.md # Implementation details
+│   └── api/                        # API documentation (future)
+├── main.py                         # Basic demo wrapper
+├── classify_text.py                # Basic CLI wrapper
+├── classify_enhanced.py            # Enhanced CLI wrapper
+├── emotion_classification_demo.ipynb  # Jupyter notebook
+├── pyproject.toml                  # Dependencies
+├── .python-version                 # Python 3.12
+├── .cursorrules                    # This file
+├── CHANGELOG.md                    # Version history
+└── README.md                       # Main documentation
+```
+
+## Core Principles
+
+### 1. Modularity
+- **Datasets** are independent modules in `bahar/datasets/`
+- **Analyzers** provide unified interfaces
+- **CLI tools** are separate from core logic
+- Each module has single responsibility
+
+### 2. Extensibility
+- Easy to add new emotion datasets (EmoBank, ISEAR, etc.)
+- Easy to add new analyzers
+- Dataset-agnostic EmotionAnalyzer interface
+
+### 3. Backward Compatibility
+- Root-level scripts (`main.py`, `classify_text.py`) are wrappers
+- Support both Rich and plain text output
+- Graceful degradation when dependencies missing
+
+### 4. Academic Focus
+- Structured data export (JSON/CSV ready)
+- Comprehensive linguistic analysis
+- Multilingual support
+- Well-documented taxonomy
+
+## Development Guidelines
+
+### Code Style
+
+**Python Version:**
+- Target: Python 3.12
+- Must match `.python-version` and `pyproject.toml`
+
+**Type Annotations:**
+- Use `from __future__ import annotations`
+- Full type hints on all public functions/methods
+- Use modern syntax: `dict`, `list`, `str | None` (not `Optional`)
+- Import from `collections.abc`: `Iterator`, `Sequence`
+
+**Formatting:**
+- Use `ruff` for linting and formatting
+- Use `pyright` for type checking
+- Follow PEP 8, PEP 484, PEP 593, PEP 698
+
+**Example:**
+```python
+from __future__ import annotations
+
+from collections.abc import Sequence
+
+def analyze_texts(texts: Sequence[str], top_k: int = 3) -> list[Result]:
+    """Analyze multiple texts."""
+    ...
+```
+
+### Package Management
+
+**Use `uv` exclusively:**
+```bash
+# Install dependencies
+uv pip install package-name
+
+# Add to project
+uv pip install package-name
+# Then update pyproject.toml manually
+
+# Sync from pyproject.toml
+uv sync
+```
+
+**Never use:** `pip`, `poetry`, `conda`
+
+### Dependencies
+
+**Current:**
+- `transformers>=4.57.0` - HuggingFace models
+- `torch>=2.9.0` - PyTorch for inference
+- `rich>=14.2.0` - Beautiful terminal output
+
+**Adding New Dependencies:**
+1. Justify necessity (prefer stdlib/manual implementation)
+2. Check it's well-maintained and trusted
+3. Install: `uv pip install package-name`
+4. Update `pyproject.toml`
+5. Document in README
+
+### Code Organization
+
+**File Naming:**
+- Use lowercase with underscores: `emotion_analyzer.py`
+- Match class names: `EmotionAnalyzer` in `emotion_analyzer.py`
+
+**Class Naming:**
+- PascalCase: `EmotionAnalyzer`, `GoEmotionsClassifier`
+- Descriptive: `EnhancedAnalysisResult`, `LinguisticFeatures`
+
+**Function Naming:**
+- snake_case: `analyze_text()`, `get_top_emotions()`
+- Verb-first: `create_table()`, `format_output()`
+
+**Module Structure:**
+```python
+"""Module docstring explaining purpose."""
+
+from __future__ import annotations
+
+# Standard library imports
+import sys
+from typing import Final
+
+# Third-party imports
+from transformers import AutoModel
+
+# Local imports
+from bahar.datasets.goemotions import GOEMOTIONS_EMOTIONS
+
+# Constants
+DEFAULT_TOP_K: Final[int] = 3
+
+# Classes and functions
+class MyClass:
+    """Class docstring."""
+    ...
+```
+
+### Adding New Datasets
+
+**Location:** `bahar/datasets/your_dataset/`
+
+**Required Files:**
+1. `__init__.py` - Package exports
+2. `taxonomy.py` - Dataset-specific definitions
+3. `classifier.py` - Classifier implementation
+4. `result.py` - Result classes
+5. `samples.py` - Sample texts (optional)
+
+**Steps:**
+1. Create directory structure
+2. Implement classifier following GoEmotions pattern
+3. Register in `bahar/analyzers/emotion_analyzer.py`
+4. Add documentation in `docs/your_dataset/`
+5. Add tests
+6. Update CHANGELOG.md
+
+**Example Registration:**
+```python
+# In bahar/analyzers/emotion_analyzer.py
+if dataset == "your_dataset":
+    if model_name is None:
+        model_name = "your-default-model"
+    from bahar.datasets.your_dataset import YourClassifier
+    self.classifier = YourClassifier(model_name)
+```
+
+### Output Formatting
+
+**Always support both Rich and plain text:**
+```python
+def format_output(result: Result, use_rich: bool = True) -> str:
+    if use_rich:
+        try:
+            from bahar.utils.rich_output import console, create_table
+            # Rich formatting
+            console.print(create_table(result))
+            return ""
+        except ImportError:
+            pass  # Fall back to plain text
+
+    # Plain text fallback
+    lines = []
+    # ... plain text formatting
+    return "\n".join(lines)
+```
+
+**Rich Color Scheme:**
+- Positive sentiment: `green`
+- Negative sentiment: `red`
+- Ambiguous sentiment: `yellow`
+- Neutral sentiment: `white`
+- High confidence (>0.7): `bright_green` or `bright_cyan`
+- Medium confidence (0.4-0.7): `yellow` or `cyan`
+- Low confidence (<0.4): `dim`
+
+### Documentation
+
+**File Locations:**
+- **Root directory:** Only essential files
+  - `README.md` - Main documentation
+  - `CHANGELOG.md` - Version history
+  - `.cursorrules` - This file
+  - `main.py`, `classify_text.py`, `classify_enhanced.py` - CLI wrappers
+  - `pyproject.toml`, `.python-version`, `.gitignore` - Configuration
+
+- **docs/ directory:** All documentation
+  - `docs/README.md` - Documentation index
+  - `docs/DEVELOPMENT.md` - Development guide
+
+- **docs/guides/ directory:** User guides and project history
+  - User guides: `quick-start.md`, `installation.md`, etc.
+  - Project history: `migration.md`, `restructure-guide.md`, etc.
+  - Setup guides: `cursor-setup.md`, `rich-output.md`, etc.
+
+- **docs/goemotions/ directory:** GoEmotions dataset docs
+  - `README.md`, `taxonomy.md`, `usage.md`
+
+- **docs/api/ directory:** API reference (future)
+
+**Required for New Features:**
+1. Docstrings on all public functions/classes
+2. Usage examples in `docs/guides/`
+3. Update main `README.md`
+4. Add entry to `CHANGELOG.md`
+5. Add guide to `docs/guides/` if needed
+6. Update `docs/README.md` index
+
+**Docstring Format:**
+```python
+def analyze(self, text: str, top_k: int = 3) -> Result:
+    """
+    Analyze emotions in text.
+
+    Args:
+        text: Input text in any supported language
+        top_k: Number of top emotions to return
+
+    Returns:
+        Result object with predictions
+
+    Raises:
+        RuntimeError: If model not loaded
+
+    Example:
+        >>> analyzer = EmotionAnalyzer(dataset="goemotions")
+        >>> analyzer.load_model()
+        >>> result = analyzer.analyze("I'm happy!", top_k=3)
+    """
+```
+
+### Testing
+
+**Test Location:** `tests/` (to be created)
+
+**Test Structure:**
+```python
+def test_analyzer_initialization():
+    """Test that analyzer initializes correctly."""
+    from bahar import EmotionAnalyzer
+    analyzer = EmotionAnalyzer(dataset="goemotions")
+    assert analyzer.dataset == "goemotions"
+
+def test_prediction():
+    """Test basic prediction."""
+    from bahar import EmotionAnalyzer
+    analyzer = EmotionAnalyzer(dataset="goemotions")
+    analyzer.load_model()
+    result = analyzer.analyze("I'm happy!", top_k=3)
+    assert len(result.get_top_emotions()) == 3
+```
+
+**Run Tests:**
+```bash
+pytest tests/
+```
+
+### Error Handling
+
+**Provide clear, actionable errors:**
+```python
+try:
+    from transformers import AutoModel
+except ImportError as exc:
+    raise RuntimeError(
+        "transformers library not installed. "
+        "Install with: uv pip install transformers torch"
+    ) from exc
+```
+
+**Never swallow exceptions silently:**
+```python
+# Bad
+try:
+    result = process()
+except:
+    pass
+
+# Good
+try:
+    result = process()
+except ValueError as exc:
+    raise RuntimeError(f"Processing failed: {exc}") from exc
+```
+
+### Logging
+
+**Use structured logging:**
+```python
+from bahar.utils import setup_logger
+
+logger = setup_logger(__name__)
+logger.info("Processing text", text_length=len(text))
+logger.error("Analysis failed", error=str(exc))
+```
+
+**No emojis in logs or code.**
+
+### Git Workflow
+
+**Branch Naming:**
+- Feature: `feature/dataset-emobank`
+- Fix: `fix/rich-output-error`
+- Docs: `docs/api-reference`
+
+**Commit Messages:**
+```
+feat: add EmoBank dataset support
+fix: resolve Rich output encoding issue
+docs: add API reference for analyzers
+refactor: reorganize dataset modules
+test: add unit tests for EmotionAnalyzer
+```
+
+**Before Committing:**
+1. Run linter: `ruff check .`
+2. Run type checker: `pyright`
+3. Test imports: `python -c "from bahar import *"`
+4. Update CHANGELOG.md
+5. Update documentation if needed
+
+### Version Management
+
+**Semantic Versioning:**
+- Major (1.0.0): Breaking changes
+- Minor (0.2.0): New features, backward compatible
+- Patch (0.2.1): Bug fixes
+
+**Update Locations:**
+1. `pyproject.toml` - version field
+2. `bahar/__init__.py` - __version__
+3. `CHANGELOG.md` - new entry
+4. `README.md` - if needed
+
+## Common Tasks
+
+### Add New Emotion Dataset
+
+```bash
+# 1. Create structure
+mkdir -p bahar/datasets/emobank
+touch bahar/datasets/emobank/{__init__,taxonomy,classifier,result,samples}.py
+
+# 2. Implement following GoEmotions pattern
+# See: bahar/datasets/goemotions/
+
+# 3. Register in EmotionAnalyzer
+# Edit: bahar/analyzers/emotion_analyzer.py
+
+# 4. Add documentation
+mkdir -p docs/emobank
+touch docs/emobank/{README,taxonomy,usage}.md
+
+# 5. Test
+python -c "from bahar import EmotionAnalyzer; a = EmotionAnalyzer('emobank')"
+
+# 6. Update CHANGELOG.md
+```
+
+### Add New Analyzer
+
+```bash
+# 1. Create file
+touch bahar/analyzers/your_analyzer.py
+
+# 2. Implement analyzer class
+# Follow pattern from emotion_analyzer.py
+
+# 3. Export from package
+# Edit: bahar/analyzers/__init__.py
+# Edit: bahar/__init__.py
+
+# 4. Add documentation
+touch docs/guides/your-analyzer.md
+
+# 5. Test
+python -c "from bahar import YourAnalyzer"
+```
+
+### Add New CLI Tool
+
+```bash
+# 1. Create in bahar/cli/
+touch bahar/cli/your_tool.py
+
+# 2. Create wrapper in root
+touch your_tool.py
+
+# 3. Make executable
+chmod +x your_tool.py
+
+# 4. Add to documentation
+# Edit: README.md, docs/guides/
+
+# 5. Test
+python your_tool.py --help
+```
+
+### Update Documentation
+
+```bash
+# 1. Edit relevant docs in docs/
+# 2. Update main README.md if needed
+# 3. Add to CHANGELOG.md
+# 4. Verify links work
+# 5. Check formatting
+```
+
+## API Design Patterns
+
+### Analyzer Pattern
+
+```python
+class YourAnalyzer:
+    """Analyzer for X."""
+
+    def __init__(self, param: str = "default") -> None:
+        """Initialize analyzer."""
+        self.param = param
+        self._loaded = False
+
+    def load_model(self) -> None:
+        """Load required models/resources."""
+        # Load model
+        self._loaded = True
+
+    def analyze(self, text: str, **kwargs) -> Result:
+        """Analyze text."""
+        if not self._loaded:
+            self.load_model()
+        # Perform analysis
+        return Result(...)
+
+    def analyze_batch(self, texts: list[str], **kwargs) -> list[Result]:
+        """Analyze multiple texts."""
+        return [self.analyze(text, **kwargs) for text in texts]
+```
+
+### Result Pattern
+
+```python
+class YourResult:
+    """Result of analysis."""
+
+    def __init__(self, text: str, predictions: dict[str, float]) -> None:
+        self.text = text
+        self.predictions = predictions
+
+    def get_top_predictions(self, k: int = 3) -> list[tuple[str, float]]:
+        """Get top-k predictions."""
+        return sorted(
+            self.predictions.items(),
+            key=lambda x: x[1],
+            reverse=True
+        )[:k]
+
+    def __repr__(self) -> str:
+        top = self.get_top_predictions(3)
+        return f"YourResult(text='{self.text[:50]}...', top={top})"
+```
+
+### Formatter Pattern
+
+```python
+def format_your_output(result: YourResult, use_rich: bool = True) -> str:
+    """Format result for display."""
+    if use_rich:
+        try:
+            from bahar.utils.rich_output import console, create_table
+            # Rich formatting
+            table = create_table(result)
+            console.print(table)
+            return ""
+        except ImportError:
+            pass
+
+    # Plain text fallback
+    lines = [f"Text: {result.text}"]
+    lines.append("Predictions:")
+    for pred, score in result.get_top_predictions():
+        lines.append(f"  {pred}: {score:.3f}")
+    return "\n".join(lines)
+```
+
+## Performance Guidelines
+
+1. **Reuse Analyzers:** Load model once, reuse for multiple texts
+2. **Batch Processing:** Use `analyze_batch()` for multiple texts
+3. **Lazy Loading:** Only load models when needed
+4. **Memory Efficiency:** Use iterators for large datasets
+5. **Caching:** Use `functools.lru_cache` for expensive pure functions
+
+## Security Guidelines
+
+1. **Input Validation:** Sanitize all external inputs
+2. **No Secrets in Code:** Use environment variables
+3. **Dependency Security:** Keep dependencies updated
+4. **Safe Defaults:** Fail securely by default
+5. **Error Messages:** Don't leak sensitive information
+
+## Future Roadmap
+
+### Short-term (v0.3.0)
+- [ ] Add unit tests (pytest)
+- [ ] Add EmoBank dataset
+- [ ] Add ISEAR dataset
+- [ ] Complete API documentation
+- [ ] Add visualization tools
+
+### Medium-term (v0.4.0)
+- [ ] REST API with FastAPI
+- [ ] Web interface
+- [ ] Batch processing CLI
+- [ ] CSV/JSON export tools
+- [ ] Docker container
+
+### Long-term (v1.0.0)
+- [ ] More language support
+- [ ] Fine-tuned multilingual models
+- [ ] Real-time analysis
+- [ ] Dashboard/analytics
+- [ ] Plugin system
+
+## Quick Reference
+
+**Import Main Classes:**
+```python
+from bahar import EmotionAnalyzer, EnhancedAnalyzer, LinguisticAnalyzer
+from bahar.datasets.goemotions import GOEMOTIONS_EMOTIONS, EMOTION_GROUPS
+```
+
+**Basic Usage:**
+```python
+analyzer = EmotionAnalyzer(dataset="goemotions")
+analyzer.load_model()
+result = analyzer.analyze("I'm happy!", top_k=3)
+```
+
+**Enhanced Usage:**
+```python
+analyzer = EnhancedAnalyzer(emotion_dataset="goemotions")
+analyzer.load_model()
+result = analyzer.analyze("Your text", top_k=3)
+```
+
+**CLI:**
+```bash
+python main.py                              # Demo
+python classify_text.py "text"              # Basic
+python classify_enhanced.py "text"          # Enhanced
+python classify_enhanced.py "text" --export-json  # JSON export
+```
+
+## Resources
+
+### Main Documentation
+- **Main README:** `README.md` - Project overview and quick start
+- **CHANGELOG:** `CHANGELOG.md` - Version history and changes
+- **Documentation Index:** `docs/README.md` - Complete documentation overview
+
+### Developer Resources
+- **Development Guide:** `docs/DEVELOPMENT.md` - Complete development workflow
+- **Cursor Setup:** `docs/guides/cursor-setup.md` - Cursor AI configuration
+- **This File:** `.cursorrules` - Project rules and standards
+
+### User Guides
+- **Quick Start:** `docs/guides/quick-start.md`
+- **Installation:** `docs/guides/installation.md`
+- **Linguistic Analysis:** `docs/guides/linguistic-analysis.md`
+- **Rich Output:** `docs/guides/rich-output.md`
+- **Adding Datasets:** `docs/guides/adding-datasets.md`
+
+### Dataset Documentation
+- **GoEmotions Overview:** `docs/goemotions/README.md`
+- **GoEmotions Taxonomy:** `docs/goemotions/taxonomy.md`
+- **GoEmotions Usage:** `docs/goemotions/usage.md`
+
+### Project History
+- **Migration Guide:** `docs/guides/migration.md`
+- **Migration Complete:** `docs/guides/migration-complete.md`
+- **Restructure Guide:** `docs/guides/restructure-guide.md`
+- **Restructure Summary:** `docs/guides/restructure-summary.md`
+
+## Contact & Support
+
+- GitHub Issues: [Report bugs or request features]
+- Documentation: `docs/`
+- Examples: Jupyter notebook, demo scripts
+
+---
+
+**Last Updated:** 2025-01-XX
+**Version:** 0.2.0
+**Maintainer:** Bahar Team
+
