@@ -16,6 +16,10 @@ from transformers import (
 
 from bahar.datasets.goemotions.result import EmotionResult
 from bahar.datasets.goemotions.taxonomy import GOEMOTIONS_EMOTIONS
+from bahar.datasets.goemotions.model_adapters import (
+    adapt_star_rating_model,
+    adapt_binary_sentiment_model,
+)
 
 
 class GoEmotionsClassifier:
@@ -44,7 +48,24 @@ class GoEmotionsClassifier:
 
     def load_model(self) -> None:
         """Load the model and tokenizer."""
-        self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        # Try to load tokenizer, use slow tokenizer if fast fails
+        try:
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                self.model_name, use_fast=True
+            )
+        except Exception:
+            # Fallback to slow tokenizer for models with tokenizer issues
+            try:
+                self._tokenizer = AutoTokenizer.from_pretrained(
+                    self.model_name, use_fast=False
+                )
+            except Exception as e:
+                # Last resort: try with trust_remote_code
+                print(f"Standard tokenizer loading failed: {e}")
+                self._tokenizer = AutoTokenizer.from_pretrained(
+                    self.model_name, use_fast=False, trust_remote_code=True
+                )
+
         self._model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name
         )
@@ -69,6 +90,26 @@ class GoEmotionsClassifier:
         """
         if self._model is None or self._tokenizer is None:
             self.load_model()
+
+        # Check if this is a star rating model (5 labels)
+        if hasattr(self._model.config, "num_labels") and self._model.config.num_labels == 5:
+            # Check if labels are star ratings
+            if hasattr(self._model.config, "id2label"):
+                first_label = str(self._model.config.id2label.get(0, ""))
+                if "star" in first_label.lower() or first_label.isdigit():
+                    return adapt_star_rating_model(self.model_name, text, top_k)
+
+        # Check if this is a binary sentiment model (2 labels)
+        if hasattr(self._model.config, "num_labels") and self._model.config.num_labels == 2:
+            return adapt_binary_sentiment_model(self.model_name, text, top_k)
+
+        # Check if this is a ternary sentiment model (3 labels: recommended/not_recommended/no_idea)
+        if hasattr(self._model.config, "num_labels") and self._model.config.num_labels == 3:
+            if hasattr(self._model.config, "id2label"):
+                labels = [str(v).lower() for v in self._model.config.id2label.values()]
+                if "recommended" in labels or "not_recommended" in labels:
+                    from bahar.datasets.goemotions.model_adapters import adapt_ternary_sentiment_model
+                    return adapt_ternary_sentiment_model(self.model_name, text, top_k)
 
         # Tokenize input
         inputs = self._tokenizer(

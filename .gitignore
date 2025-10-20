@@ -52,3 +52,11 @@ tests/__pycache__/
 
 # Logs
 *.log
+
+# Streamlit
+.streamlit/
+config/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints

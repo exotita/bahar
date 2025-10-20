@@ -79,18 +79,25 @@ class EnhancedAnalyzer:
 
     def __init__(
         self,
-        emotion_dataset: str = "goemotions",
+        language: str | None = None,
+        model_key: str | None = None,
         model_name: str | None = None,
+        auto_detect_language: bool = True,
     ) -> None:
         """
-        Initialize the enhanced analyzer.
+        Initialize the enhanced analyzer with multilingual support.
 
         Args:
-            emotion_dataset: Dataset to use for emotion analysis
-            model_name: Optional custom model name
+            language: Language code ("english", "dutch", "persian"). Auto-detected if None.
+            model_key: Model key for the language (e.g., "goemotions", "sentiment").
+            model_name: Explicit HuggingFace model name (overrides language/model_key).
+            auto_detect_language: Automatically detect language from input text.
         """
         self.emotion_analyzer = EmotionAnalyzer(
-            dataset=emotion_dataset, model_name=model_name
+            language=language,
+            model_key=model_key,
+            model_name=model_name,
+            auto_detect_language=auto_detect_language,
         )
         self.linguistic_analyzer = LinguisticAnalyzer()
         self._loaded: bool = False
