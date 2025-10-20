@@ -28,12 +28,12 @@ LANGUAGE_MODELS: Final[dict[str, dict[str, str]]] = {
         "emotion": "wietsedv/bert-base-dutch-cased-finetuned-sentiment",
     },
     "persian": {
-        # ALBERT Persian sentiment
-        "sentiment": "m3hrdadfi/albert-fa-base-v2-sentiment-deepsentipers-binary",
-        # ParsBERT sentiment
-        "parsbert": "HooshvareLab/bert-fa-base-uncased-sentiment-digikala",
-        # Alternative: ParsBERT base
-        "parsbert-emotion": "HooshvareLab/bert-fa-base-uncased-sentiment-snappfood",
+        # ParsBERT sentiment (more stable)
+        "sentiment": "HooshvareLab/bert-fa-base-uncased-sentiment-digikala",
+        # ParsBERT SnappFood
+        "parsbert-snappfood": "HooshvareLab/bert-fa-base-uncased-sentiment-snappfood",
+        # ALBERT Persian sentiment (may have tokenizer issues)
+        "albert-sentiment": "m3hrdadfi/albert-fa-base-v2-sentiment-deepsentipers-binary",
     },
 }
 
