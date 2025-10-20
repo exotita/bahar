@@ -8,6 +8,12 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import torch
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+)
+
 from bahar.datasets.goemotions.result import EmotionResult
 from bahar.datasets.goemotions.taxonomy import GOEMOTIONS_EMOTIONS
 
@@ -38,17 +44,6 @@ class GoEmotionsClassifier:
 
     def load_model(self) -> None:
         """Load the model and tokenizer."""
-        try:
-            from transformers import (
-                AutoModelForSequenceClassification,
-                AutoTokenizer,
-            )
-        except ImportError as exc:
-            raise RuntimeError(
-                "transformers library not installed. "
-                "Install with: uv pip install transformers torch"
-            ) from exc
-
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self._model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name
@@ -74,13 +69,6 @@ class GoEmotionsClassifier:
         """
         if self._model is None or self._tokenizer is None:
             self.load_model()
-
-        try:
-            import torch
-        except ImportError as exc:
-            raise RuntimeError(
-                "torch library not installed. " "Install with: uv pip install torch"
-            ) from exc
 
         # Tokenize input
         inputs = self._tokenizer(

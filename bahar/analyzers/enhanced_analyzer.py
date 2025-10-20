@@ -12,6 +12,15 @@ from bahar.analyzers.linguistic_analyzer import (
     LinguisticFeatures,
 )
 from bahar.datasets.goemotions.result import EmotionResult
+from bahar.utils.rich_output import (
+    console,
+    create_emotion_table,
+    create_linguistic_table,
+    create_summary_panel,
+    print_header,
+    print_section,
+    print_text_analysis,
+)
 
 
 class EnhancedAnalysisResult:
@@ -146,56 +155,43 @@ def format_enhanced_output(result: EnhancedAnalysisResult, use_rich: bool = True
         Formatted string (or prints directly if use_rich=True)
     """
     if use_rich:
-        try:
-            from bahar.utils.rich_output import (
-                console,
-                create_emotion_table,
-                create_linguistic_table,
-                create_summary_panel,
-                print_header,
-                print_section,
-                print_text_analysis,
-            )
+        # Header
+        print_header(
+            "COMPREHENSIVE TEXT ANALYSIS",
+            "Emotion Classification + Linguistic Analysis"
+        )
 
-            # Header
-            print_header(
-                "COMPREHENSIVE TEXT ANALYSIS",
-                "Emotion Classification + Linguistic Analysis"
-            )
+        # Text
+        print_text_analysis(result.text)
 
-            # Text
-            print_text_analysis(result.text)
+        # Emotion Analysis
+        print_section("EMOTION ANALYSIS (GoEmotions)")
 
-            # Emotion Analysis
-            print_section("EMOTION ANALYSIS (GoEmotions)")
+        sentiment = result.emotion_result.get_sentiment_group()
+        sentiment_colors = {
+            "positive": "green",
+            "negative": "red",
+            "ambiguous": "yellow",
+            "neutral": "white"
+        }
+        console.print(
+            f"[bold]Sentiment:[/bold] [{sentiment_colors.get(sentiment, 'white')}]{sentiment.upper()}[/{sentiment_colors.get(sentiment, 'white')}]"
+        )
 
-            sentiment = result.emotion_result.get_sentiment_group()
-            sentiment_colors = {
-                "positive": "green",
-                "negative": "red",
-                "ambiguous": "yellow",
-                "neutral": "white"
-            }
-            console.print(
-                f"[bold]Sentiment:[/bold] [{sentiment_colors.get(sentiment, 'white')}]{sentiment.upper()}[/{sentiment_colors.get(sentiment, 'white')}]"
-            )
+        table = create_emotion_table(result.emotion_result)
+        console.print(table)
 
-            table = create_emotion_table(result.emotion_result)
-            console.print(table)
+        # Linguistic Analysis
+        print_section("LINGUISTIC ANALYSIS (Academic Dimensions)")
+        table = create_linguistic_table(result.linguistic_features)
+        console.print(table)
 
-            # Linguistic Analysis
-            print_section("LINGUISTIC ANALYSIS (Academic Dimensions)")
-            table = create_linguistic_table(result.linguistic_features)
-            console.print(table)
+        # Summary
+        console.print()
+        panel = create_summary_panel(result)
+        console.print(panel)
 
-            # Summary
-            console.print()
-            panel = create_summary_panel(result)
-            console.print(panel)
-
-            return ""  # Already printed
-        except ImportError:
-            pass  # Fall back to plain text
+        return ""  # Already printed
 
     # Plain text fallback
     lines: list[str] = []

@@ -7,6 +7,8 @@ Reference: https://pypi.org/project/rich/
 
 from __future__ import annotations
 
+import time
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
@@ -232,7 +234,6 @@ def create_progress_bar(description: str = "Processing") -> Progress:
 def print_model_loading() -> None:
     """Print model loading message."""
     with console.status("[bold green]Loading model...", spinner="dots"):
-        import time
         time.sleep(0.5)  # Brief pause for visual effect
     print_success("Model loaded successfully!")
 

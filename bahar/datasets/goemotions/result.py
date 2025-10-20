@@ -3,6 +3,11 @@
 from __future__ import annotations
 
 from bahar.datasets.goemotions.taxonomy import EMOTION_GROUPS
+from bahar.utils.rich_output import (
+    console,
+    create_emotion_table,
+    print_text_analysis,
+)
 
 
 class EmotionResult:
@@ -55,34 +60,25 @@ def format_emotion_output(result: EmotionResult, use_rich: bool = True) -> str:
         Formatted string (or prints directly if use_rich=True)
     """
     if use_rich:
-        try:
-            from bahar.utils.rich_output import (
-                console,
-                create_emotion_table,
-                print_text_analysis,
-            )
+        print_text_analysis(result.text)
 
-            print_text_analysis(result.text)
+        # Print sentiment
+        sentiment = result.get_sentiment_group()
+        sentiment_colors = {
+            "positive": "green",
+            "negative": "red",
+            "ambiguous": "yellow",
+            "neutral": "white"
+        }
+        console.print(
+            f"[bold]Sentiment:[/bold] [{sentiment_colors.get(sentiment, 'white')}]{sentiment.upper()}[/{sentiment_colors.get(sentiment, 'white')}]"
+        )
 
-            # Print sentiment
-            sentiment = result.get_sentiment_group()
-            sentiment_colors = {
-                "positive": "green",
-                "negative": "red",
-                "ambiguous": "yellow",
-                "neutral": "white"
-            }
-            console.print(
-                f"[bold]Sentiment:[/bold] [{sentiment_colors.get(sentiment, 'white')}]{sentiment.upper()}[/{sentiment_colors.get(sentiment, 'white')}]"
-            )
+        # Print emotion table
+        table = create_emotion_table(result)
+        console.print(table)
 
-            # Print emotion table
-            table = create_emotion_table(result)
-            console.print(table)
-
-            return ""  # Already printed
-        except ImportError:
-            pass  # Fall back to plain text
+        return ""  # Already printed
 
     # Plain text fallback
     lines: list[str] = []

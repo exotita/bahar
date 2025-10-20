@@ -13,11 +13,12 @@ from __future__ import annotations
 import json
 import sys
 
-from enhanced_classifier import (
-    EnhancedEmotionClassifier,
+from bahar.analyzers.enhanced_analyzer import (
+    EnhancedAnalyzer,
     export_to_academic_format,
     format_enhanced_output,
 )
+from bahar.utils.rich_output import print_info, print_success
 
 
 def main() -> None:
@@ -52,20 +53,17 @@ def main() -> None:
             sys.exit(1)
 
     # Initialize classifier
-    print("Initializing enhanced classifier...")
-    classifier = EnhancedEmotionClassifier()
+    print_info("Initializing enhanced classifier...")
 
-    try:
-        classifier.load_model()
-    except RuntimeError as exc:
-        print(f"\nError: {exc}")
-        print("\nTo install required dependencies, run:")
-        print("  source .venv/bin/activate")
-        print("  uv pip install transformers torch")
-        sys.exit(1)
+    classifier = EnhancedAnalyzer(emotion_dataset="goemotions")
+
+    classifier.load_model()
+    print_success("Model loaded!")
 
     # Perform analysis
-    print("Analyzing text...\n")
+    print_info("Analyzing text...")
+    print()
+
     result = classifier.analyze(text, top_k=top_k)
 
     if export_json_flag:
@@ -74,7 +72,7 @@ def main() -> None:
         print(json.dumps(academic_data, indent=2, ensure_ascii=False))
     else:
         # Display formatted output
-        print(format_enhanced_output(result))
+        format_enhanced_output(result, use_rich=True)
 
 
 if __name__ == "__main__":

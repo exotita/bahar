@@ -11,11 +11,14 @@ Suitable for academic linguistic research.
 
 from __future__ import annotations
 
-from enhanced_classifier import (
-    EnhancedEmotionClassifier,
+from rich.table import Table
+
+from bahar.analyzers.enhanced_analyzer import (
+    EnhancedAnalyzer,
     export_to_academic_format,
     format_enhanced_output,
 )
+from bahar.utils.rich_output import console, print_header, print_info, print_section, print_success
 
 # Sample texts demonstrating different linguistic dimensions
 DEMO_TEXTS: list[dict[str, str]] = [
@@ -64,53 +67,50 @@ DEMO_TEXTS: list[dict[str, str]] = [
 
 def main() -> None:
     """Run enhanced analysis demo."""
-    print("=" * 80)
-    print("ENHANCED EMOTION & LINGUISTIC ANALYSIS DEMO")
-    print("Combining GoEmotions + Academic Linguistic Dimensions")
-    print("=" * 80)
+    print_header(
+        "ENHANCED EMOTION & LINGUISTIC ANALYSIS DEMO",
+        "Combining GoEmotions + Academic Linguistic Dimensions"
+    )
 
     # Initialize classifier
-    print("\nInitializing classifier...")
-    print("Note: First run will download the model (~400MB)")
+    print_info("Initializing classifier...")
+    print_info("Note: First run will download the model (~400MB)")
 
-    classifier = EnhancedEmotionClassifier()
-
-    try:
-        classifier.load_model()
-        print("Model loaded successfully!")
-    except RuntimeError as exc:
-        print(f"\nError: {exc}")
-        print("\nTo install required dependencies, run:")
-        print("  source .venv/bin/activate")
-        print("  uv pip install transformers torch")
-        return
+    classifier = EnhancedAnalyzer(emotion_dataset="goemotions")
+    classifier.load_model()
+    print_success("Model loaded successfully!")
 
     # Analyze demo texts
-    print("\n" + "=" * 80)
-    print("ANALYZING SAMPLE TEXTS")
-    print("=" * 80)
+    console.print()
+    print_section("ANALYZING SAMPLE TEXTS")
 
     for idx, sample in enumerate(DEMO_TEXTS, 1):
-        print(f"\n[Example {idx}] {sample['description']}")
+        console.print(f"\n[bold cyan][Example {idx}][/bold cyan] [dim]{sample['description']}[/dim]")
         result = classifier.analyze(sample["text"], top_k=3)
-        print(format_enhanced_output(result))
+        format_enhanced_output(result, use_rich=True)
 
         # Show academic export format for first example
         if idx == 1:
-            print("\n" + "-" * 80)
-            print("ACADEMIC EXPORT FORMAT (for research/CSV)")
-            print("-" * 80)
+            console.print()
+            print_section("ACADEMIC EXPORT FORMAT (for research/CSV)")
+
             academic_data = export_to_academic_format(result)
+
+            table = Table(show_header=True, header_style="bold cyan")
+            table.add_column("Field", style="yellow", width=35)
+            table.add_column("Value", style="white", width=40)
+
             for key, value in academic_data.items():
                 if isinstance(value, float):
-                    print(f"  {key:30s}: {value:.4f}")
+                    table.add_row(key, f"{value:.4f}")
                 else:
-                    print(f"  {key:30s}: {value}")
+                    table.add_row(key, str(value))
+
+            console.print(table)
 
     # Multilingual examples
-    print("\n" + "=" * 80)
-    print("MULTILINGUAL EXAMPLES")
-    print("=" * 80)
+    console.print()
+    print_section("MULTILINGUAL EXAMPLES")
 
     multilingual_samples = [
         {
@@ -128,15 +128,14 @@ def main() -> None:
     ]
 
     for sample in multilingual_samples:
-        print(f"\n[{sample['lang']}]")
+        console.print(f"\n[bold yellow][{sample['lang']}][/bold yellow]")
         result = classifier.analyze(sample["text"], top_k=3)
-        print(format_enhanced_output(result))
+        format_enhanced_output(result, use_rich=True)
 
-    print("\n" + "=" * 80)
-    print("Demo completed!")
-    print("\nFor custom text analysis, use:")
-    print("  python classify_enhanced.py \"Your text here\"")
-    print("=" * 80)
+    console.print()
+    print_success("Demo completed!")
+    console.print("\n[bold]For custom text analysis, use:[/bold]")
+    console.print("  [cyan]python classify_enhanced.py \"Your text here\"[/cyan]")
 
 
 if __name__ == "__main__":

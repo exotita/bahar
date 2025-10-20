@@ -11,30 +11,25 @@ from __future__ import annotations
 
 import sys
 
-from emotion_classifier import (
-    MultilingualEmotionClassifier,
-    format_emotion_output,
-)
+from bahar.analyzers.emotion_analyzer import EmotionAnalyzer
+from bahar.datasets.goemotions.result import format_emotion_output
+from bahar.utils.rich_output import print_info, print_success
 
 
 def classify_custom_text(text: str, top_k: int = 3) -> None:
     """Classify a custom text and display results."""
-    print("Initializing emotion classifier...")
+    print_info("Initializing emotion classifier...")
 
-    classifier = MultilingualEmotionClassifier()
+    classifier = EmotionAnalyzer(dataset="goemotions")
 
-    try:
-        classifier.load_model()
-    except RuntimeError as exc:
-        print(f"\nError: {exc}")
-        print("\nTo install required dependencies, run:")
-        print("  source .venv/bin/activate")
-        print("  uv pip install transformers torch")
-        sys.exit(1)
+    classifier.load_model()
+    print_success("Model loaded!")
 
-    print("Classifying text...\n")
-    result = classifier.predict(text, top_k=top_k)
-    print(format_emotion_output(result))
+    print_info("Classifying text...")
+    print()
+
+    result = classifier.analyze(text, top_k=top_k)
+    format_emotion_output(result, use_rich=True)
 
 
 def main() -> None:

@@ -9,6 +9,9 @@ from __future__ import annotations
 
 from typing import Final
 
+from bahar.utils.rich_output import console, print_header
+from rich.table import Table
+
 # Samples organized by linguistic dimensions
 LINGUISTIC_SAMPLES: Final[dict[str, list[dict[str, str]]]] = {
     # FORMALITY: FORMAL
@@ -378,11 +381,16 @@ def get_all_samples_flat() -> list[dict[str, str]]:
 
 def print_category_summary() -> None:
     """Print summary of all categories and sample counts."""
-    print("Linguistic Sample Categories:")
-    print("=" * 60)
+    print_header("Linguistic Sample Categories", f"{len(get_all_categories())} categories")
+
+    table = Table(show_header=True, header_style="bold cyan")
+    table.add_column("Category", style="yellow", width=25)
+    table.add_column("Samples", style="magenta", justify="right", width=10)
+
     for category, samples in LINGUISTIC_SAMPLES.items():
-        print(f"  {category:20s}: {len(samples)} samples")
-    print("=" * 60)
-    print(f"Total samples: {len(get_all_samples_flat())}")
-    print(f"Total categories: {len(get_all_categories())}")
+        table.add_row(category, str(len(samples)))
+
+    console.print(table)
+    console.print(f"\n[bold]Total samples:[/bold] {len(get_all_samples_flat())}")
+    console.print(f"[bold]Total categories:[/bold] {len(get_all_categories())}")
 

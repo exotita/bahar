@@ -7,55 +7,42 @@ for Dutch, Persian, and English text.
 
 from __future__ import annotations
 
-from emotion_classifier import (
-    MultilingualEmotionClassifier,
-    format_emotion_output,
-)
-from sample_texts import SAMPLE_TEXTS
+from bahar.analyzers.emotion_analyzer import EmotionAnalyzer
+from bahar.datasets.goemotions.result import format_emotion_output
+from bahar.datasets.goemotions.samples import SAMPLE_TEXTS
+from bahar.utils.rich_output import print_header, print_info, print_section, print_success
 
 
 def main() -> None:
     """Run emotion classification demo on sample texts."""
-    print("=" * 80)
-    print("Bahar - Multilingual Emotion Classification")
-    print("Based on GoEmotions Dataset (27 emotions + neutral)")
-    print("=" * 80)
+    print_header(
+        "Bahar - Multilingual Emotion Classification",
+        "Based on GoEmotions Dataset (28 emotions)"
+    )
 
     # Initialize classifier
-    print("\nInitializing emotion classifier...")
-    print("Note: First run will download the model (~400MB)")
+    print_info("Initializing emotion classifier...")
+    print_info("Note: First run will download the model (~400MB)")
 
-    classifier = MultilingualEmotionClassifier()
-
-    try:
-        classifier.load_model()
-        print("Model loaded successfully!")
-    except RuntimeError as exc:
-        print(f"\nError: {exc}")
-        print("\nTo install required dependencies, run:")
-        print("  source .venv/bin/activate")
-        print("  uv pip install transformers torch")
-        return
+    classifier = EmotionAnalyzer(dataset="goemotions")
+    classifier.load_model()
+    print_success("Model loaded successfully!")
 
     # Process samples for each language
     for language in ["english", "dutch", "persian"]:
-        print("\n" + "=" * 80)
-        print(f"{language.upper()} SAMPLES")
-        print("=" * 80)
+        print_section(f"{language.upper()} SAMPLES")
 
         samples = SAMPLE_TEXTS[language]
         for idx, sample in enumerate(samples, 1):
             print(f"\n[Sample {idx}]")
-            result = classifier.predict(sample["text"], top_k=3)
-            print(format_emotion_output(result))
+            result = classifier.analyze(sample["text"], top_k=3)
+            format_emotion_output(result, use_rich=True)
 
             if "translation" in sample:
                 print(f"\nTranslation: {sample['translation']}")
             print(f"Expected emotion: {sample['expected_emotion']}")
 
-    print("\n" + "=" * 80)
-    print("Demo completed!")
-    print("=" * 80)
+    print_success("\nDemo completed!")
 
 
 if __name__ == "__main__":
