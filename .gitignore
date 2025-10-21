@@ -55,7 +55,16 @@ tests/__pycache__/
 
 # Streamlit
 .streamlit/
-config/
+
+# Docker volumes (cached models and data)
+volumes/*/
+!volumes/.gitignore
+!volumes/README.md
+
+# Docker backups
+bahar-backup-*.tar.gz
+bahar-volumes-backup-*.tar.gz
+*.tar.gz
 
 # Jupyter
 .ipynb_checkpoints/

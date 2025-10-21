@@ -1,0 +1,213 @@
+{
+  "version": "1.0",
+  "models": [
+    {
+      "model_id": "j-hartmann/emotion-english-distilroberta-base",
+      "name": "Emotion English DistilRoBERTa-base",
+      "description": "https://huggingface.co/j-hartmann/emotion-english-distilroberta-base",
+      "task_type": "text-classification",
+      "language": [
+        "english",
+        "arabic"
+      ],
+      "num_labels": 7,
+      "label_map": {
+        "0": "anger",
+        "1": "disgust",
+        "2": "fear",
+        "3": "joy",
+        "4": "neutral",
+        "5": "sadness",
+        "6": "surprise"
+      },
+      "taxonomy": "goemotions",
+      "added_date": "2025-10-21T01:42:36.459725",
+      "last_used": "2025-10-21T01:47:21.314603",
+      "use_count": 4,
+      "tags": [
+        "Emotion",
+        "English"
+      ],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    },
+    {
+      "model_id": "nlptown/bert-base-multilingual-uncased-sentiment",
+      "name": "bert-base-multilingual-uncased-sentiment",
+      "description": "This is a bert-base-multilingual-uncased model finetuned for sentiment analysis on product reviews in six languages: English, Dutch, German, French, Spanish, and Italian. It predicts the sentiment of the review as a number of stars (between 1 and 5).",
+      "task_type": "text-classification",
+      "language": [
+        "english",
+        "dutch",
+        "persian",
+        "german",
+        "french",
+        "spanish"
+      ],
+      "num_labels": 5,
+      "label_map": {
+        "0": "1 star",
+        "1": "2 stars",
+        "2": "3 stars",
+        "3": "4 stars",
+        "4": "5 stars"
+      },
+      "taxonomy": "star_rating",
+      "added_date": "2025-10-21T01:46:19.608194",
+      "last_used": null,
+      "use_count": 0,
+      "tags": [
+        "English",
+        "Dutch",
+        "German",
+        "French",
+        "Spanish",
+        "Italian",
+        "Sentiment",
+        "Review"
+      ],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    },
+    {
+      "model_id": "boltuix/bert-emotion",
+      "name": "BERT-Emotion — Lightweight BERT for Real-Time Emotion Detection",
+      "description": "BERT-Emotion is a lightweight NLP model derived from bert-mini and bert-micro, fine-tuned for short-text emotion detection on edge and IoT devices. With a quantized size of ~20MB and ~6M parameters, it classifies text into 13 rich emotional categories (e.g., Happiness, Sadness, Anger, Love) with high accuracy. Optimized for low-latency and offline operation, BERT-Emotion is ideal for privacy-first applications like chatbots, social media sentiment analysis, and mental health monitoring in resource-constrained environments such as mobile apps, wearables, and smart home devices.\n\nModel Name: BERT-Emotion\nSize: ~20MB (quantized)\nParameters: ~6M\nArchitecture: Lightweight BERT (4 layers, hidden size 128, 4 attention heads)\nDescription: Lightweight 4-layer, 128-hidden model for emotion detection\nLicense: Apache-2.0 — free for commercial and personal use",
+      "task_type": "text-classification",
+      "language": [
+        "english"
+      ],
+      "num_labels": 13,
+      "label_map": {
+        "0": "sadness",
+        "1": "anger",
+        "2": "love",
+        "3": "surprise",
+        "4": "fear",
+        "5": "happiness",
+        "6": "neutral",
+        "7": "disgust",
+        "8": "shame",
+        "9": "guilt",
+        "10": "confusion",
+        "11": "desire",
+        "12": "sarcasm"
+      },
+      "taxonomy": "goemotions",
+      "added_date": "2025-10-21T01:50:00.841670",
+      "last_used": null,
+      "use_count": 0,
+      "tags": [
+        "English"
+      ],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    },
+    {
+      "model_id": "papluca/xlm-roberta-base-language-detection",
+      "name": "xlm-roberta-base-language-detection",
+      "description": "Model description\nThis model is an XLM-RoBERTa transformer model with a classification head on top (i.e. a linear layer on top of the pooled output). For additional information please refer to the xlm-roberta-base model card or to the paper Unsupervised Cross-lingual Representation Learning at Scale by Conneau et al.\n\nIntended uses & limitations\nYou can directly use this model as a language detector, i.e. for sequence classification tasks. Currently, it supports the following 20 languages:\n\narabic (ar), bulgarian (bg), german (de), modern greek (el), english (en), spanish (es), french (fr), hindi (hi), italian (it), japanese (ja), dutch (nl), polish (pl), portuguese (pt), russian (ru), swahili (sw), thai (th), turkish (tr), urdu (ur), vietnamese (vi), and chinese (zh)\n\nTraining and evaluation data\nThe model was fine-tuned on the Language Identification dataset, which consists of text sequences in 20 languages. The training set contains 70k samples, while the validation and test sets 10k each. The average accuracy on the test set is 99.6% (this matches the average macro/weighted F1-score being the test set perfectly balanced). A more detailed evaluation is provided by the following table.",
+      "task_type": "text-classification",
+      "language": [
+        "english",
+        "dutch",
+        "persian",
+        "german",
+        "french",
+        "spanish"
+      ],
+      "num_labels": 20,
+      "label_map": {
+        "0": "ja",
+        "1": "nl",
+        "2": "ar",
+        "3": "pl",
+        "4": "de",
+        "5": "it",
+        "6": "pt",
+        "7": "tr",
+        "8": "es",
+        "9": "hi",
+        "10": "el",
+        "11": "ur",
+        "12": "bg",
+        "13": "en",
+        "14": "fr",
+        "15": "zh",
+        "16": "ru",
+        "17": "th",
+        "18": "sw",
+        "19": "vi"
+      },
+      "taxonomy": "goemotions",
+      "added_date": "2025-10-21T02:01:35.828928",
+      "last_used": null,
+      "use_count": 0,
+      "tags": [],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    },
+    {
+      "model_id": "tabularisai/multilingual-sentiment-analysis",
+      "name": "multilingual-sentiment-analysis",
+      "description": "Model from HuggingFace: tabularisai/multilingual-sentiment-analysis",
+      "task_type": "text-classification",
+      "language": [
+        "english",
+        "dutch",
+        "persian",
+        "german",
+        "french",
+        "spanish"
+      ],
+      "num_labels": 5,
+      "label_map": {
+        "0": "Very Negative",
+        "1": "Negative",
+        "2": "Neutral",
+        "3": "Positive",
+        "4": "Very Positive"
+      },
+      "taxonomy": "sentiment",
+      "added_date": "2025-10-21T02:05:16.193519",
+      "last_used": null,
+      "use_count": 0,
+      "tags": [],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    },
+    {
+      "model_id": "citizenlab/twitter-xlm-roberta-base-sentiment-finetunned",
+      "name": "twitter-xlm-roberta-base-sentiment-finetunned",
+      "description": "Model from HuggingFace: citizenlab/twitter-xlm-roberta-base-sentiment-finetunned",
+      "task_type": "text-classification",
+      "language": [
+        "english",
+        "dutch",
+        "persian",
+        "german",
+        "french",
+        "spanish"
+      ],
+      "num_labels": 3,
+      "label_map": {
+        "0": "Negative",
+        "1": "Neutral",
+        "2": "Positive"
+      },
+      "taxonomy": "sentiment",
+      "added_date": "2025-10-21T02:06:10.869426",
+      "last_used": null,
+      "use_count": 0,
+      "tags": [],
+      "custom_config": {},
+      "is_active": true,
+      "version": null
+    }
+  ]
+}

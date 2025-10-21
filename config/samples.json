@@ -1,0 +1,36 @@
+{
+  "english": [
+    {
+      "text": "I'm so happy and excited about this!",
+      "category": "positive"
+    },
+    {
+      "text": "This is absolutely terrible and disappointing.",
+      "category": "negative"
+    },
+    {
+      "text": "I'm not sure how I feel about this situation.",
+      "category": "ambiguous"
+    }
+  ],
+  "dutch": [
+    {
+      "text": "Ik ben zo blij en enthousiast hierover!",
+      "category": "positive"
+    },
+    {
+      "text": "Dit is absoluut verschrikkelijk en teleurstellend.",
+      "category": "negative"
+    }
+  ],
+  "persian": [
+    {
+      "text": "من خیلی خوشحال و هیجان‌زده‌ام!",
+      "category": "positive"
+    },
+    {
+      "text": "این واقعاً افتضاح و ناامیدکننده است.",
+      "category": "negative"
+    }
+  ]
+}
