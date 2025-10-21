@@ -24,15 +24,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv for fast dependency management
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:${PATH}"
-
-# Copy dependency files
+# Copy dependency files first
 COPY pyproject.toml .python-version ./
 
-# Install Python dependencies using uv
-RUN uv pip install --system --no-cache -r pyproject.toml
+# Install uv and Python dependencies in one layer
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    export PATH="/root/.cargo/bin:${PATH}" && \
+    uv pip install --system --no-cache \
+        transformers>=4.57.0 \
+        torch>=2.9.0 \
+        rich>=14.2.0 \
+        streamlit>=1.31.0 \
+        spacy>=3.7.0 \
+        pandas>=2.0.0 \
+        nltk>=3.9.0 \
+        gensim>=4.3.0 \
+        scikit-learn>=1.5.0 \
+        umap-learn>=0.5.0 \
+        matplotlib>=3.9.0 \
+        seaborn>=0.13.0 \
+        networkx>=3.3 \
+        python-Levenshtein>=0.25.0 \
+        textacy>=0.13.0 \
+        pyphen>=0.16.0 \
+        pillow>=10.0.0
+
+# Add uv to PATH for subsequent commands
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Download spaCy models
 RUN python -m spacy download en_core_web_lg && \
