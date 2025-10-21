@@ -19,6 +19,7 @@ services:
       # Configuration and data (persistent)
       - ./config:/app/config
       - ./volumes/app_data:/app/data
+      - ./bahar:/app/bahar
 
       # Optional: Mount docs for live updates during development
       # - ./docs:/app/docs:ro
