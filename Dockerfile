@@ -29,7 +29,7 @@ COPY pyproject.toml .python-version ./
 
 # Install uv and Python dependencies in one layer
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    export PATH="/root/.cargo/bin:${PATH}" && \
+    export PATH="/root/.local/bin:${PATH}" && \
     uv pip install --system --no-cache \
         transformers>=4.57.0 \
         torch>=2.9.0 \
@@ -50,7 +50,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
         pillow>=10.0.0
 
 # Add uv to PATH for subsequent commands
-ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PATH="/root/.local/bin:${PATH}"
 
 # Download spaCy models
 RUN python -m spacy download en_core_web_lg && \
