@@ -1,10 +1,12 @@
 """
-Enhanced analyzer combining emotion and linguistic analysis.
+Enhanced analyzer combining emotion, linguistic, and NLP analysis.
 
 Provides comprehensive text analysis for academic research.
 """
 
 from __future__ import annotations
+
+from typing import Any
 
 from bahar.analyzers.emotion_analyzer import EmotionAnalyzer
 from bahar.analyzers.linguistic_analyzer import (
@@ -22,19 +24,30 @@ from bahar.utils.rich_output import (
     print_text_analysis,
 )
 
+# Optional NLP features
+try:
+    from bahar.analyzers.nlp_features import NLPAnalyzer, NLPFeatures
+    NLP_AVAILABLE = True
+except ImportError:
+    NLP_AVAILABLE = False
+    NLPFeatures = Any  # type: ignore
+    NLPAnalyzer = Any  # type: ignore
+
 
 class EnhancedAnalysisResult:
-    """Combined emotion and linguistic analysis result."""
+    """Combined emotion, linguistic, and NLP analysis result."""
 
     def __init__(
         self,
         text: str,
         emotion_result: EmotionResult,
         linguistic_features: LinguisticFeatures,
+        nlp_features: NLPFeatures | None = None,
     ) -> None:
         self.text: str = text
         self.emotion_result: EmotionResult = emotion_result
         self.linguistic_features: LinguisticFeatures = linguistic_features
+        self.nlp_features: NLPFeatures | None = nlp_features
 
     def get_summary(self) -> dict[str, str | list[tuple[str, float]]]:
         """Get a summary of all analysis results."""
@@ -65,7 +78,7 @@ class EnhancedAnalysisResult:
 
 class EnhancedAnalyzer:
     """
-    Enhanced analyzer combining emotion detection and linguistic analysis.
+    Enhanced analyzer combining emotion detection, linguistic analysis, and NLP features.
 
     Provides:
     - Fine-grained emotion classification (28 emotions from GoEmotions)
@@ -73,6 +86,7 @@ class EnhancedAnalyzer:
     - Tone detection
     - Emotional intensity measurement
     - Communication style identification
+    - Advanced NLP features (POS, NER, dependencies) - Optional with spaCy
 
     Suitable for academic linguistic research and comprehensive sentiment analysis.
     """
@@ -83,6 +97,7 @@ class EnhancedAnalyzer:
         model_key: str | None = None,
         model_name: str | None = None,
         auto_detect_language: bool = True,
+        enable_nlp: bool = False,
     ) -> None:
         """
         Initialize the enhanced analyzer with multilingual support.
@@ -92,6 +107,7 @@ class EnhancedAnalyzer:
             model_key: Model key for the language (e.g., "goemotions", "sentiment").
             model_name: Explicit HuggingFace model name (overrides language/model_key).
             auto_detect_language: Automatically detect language from input text.
+            enable_nlp: Enable advanced NLP analysis with spaCy (requires spaCy installation).
         """
         self.emotion_analyzer = EmotionAnalyzer(
             language=language,
@@ -100,12 +116,26 @@ class EnhancedAnalyzer:
             auto_detect_language=auto_detect_language,
         )
         self.linguistic_analyzer = LinguisticAnalyzer()
+
+        # Optional NLP analyzer
+        self.enable_nlp = enable_nlp and NLP_AVAILABLE
+        self.nlp_analyzer: NLPAnalyzer | None = None
+        if self.enable_nlp:
+            self.nlp_analyzer = NLPAnalyzer(language=language or "english")
+
         self._loaded: bool = False
 
     def load_model(self) -> None:
-        """Load the emotion classification model."""
+        """Load the emotion classification model and NLP model if enabled."""
         if not self._loaded:
             self.emotion_analyzer.load_model()
+            if self.nlp_analyzer is not None:
+                try:
+                    self.nlp_analyzer.load_model()
+                except RuntimeError as e:
+                    console.print(f"[yellow]Warning: NLP model not loaded: {e}[/yellow]")
+                    self.nlp_analyzer = None
+                    self.enable_nlp = False
             self._loaded = True
 
     def analyze(self, text: str, top_k: int = 3) -> EnhancedAnalysisResult:
@@ -117,7 +147,7 @@ class EnhancedAnalyzer:
             top_k: Number of top emotions to return
 
         Returns:
-            EnhancedAnalysisResult with emotion and linguistic analysis
+            EnhancedAnalysisResult with emotion, linguistic, and optional NLP analysis
         """
         if not self._loaded:
             self.load_model()
@@ -128,10 +158,19 @@ class EnhancedAnalyzer:
         # Perform linguistic analysis
         linguistic_features = self.linguistic_analyzer.analyze(text)
 
+        # Perform NLP analysis if enabled
+        nlp_features = None
+        if self.nlp_analyzer is not None:
+            try:
+                nlp_features = self.nlp_analyzer.analyze(text)
+            except Exception as e:
+                console.print(f"[yellow]Warning: NLP analysis failed: {e}[/yellow]")
+
         return EnhancedAnalysisResult(
             text=text,
             emotion_result=emotion_result,
             linguistic_features=linguistic_features,
+            nlp_features=nlp_features,
         )
 
     def analyze_batch(

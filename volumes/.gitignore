@@ -1,0 +1,9 @@
+# Ignore all contents in volumes directory (cached models and data)
+*
+
+# But keep this .gitignore file
+!.gitignore
+
+# And keep the README
+!README.md
+

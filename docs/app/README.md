@@ -7,11 +7,13 @@ This directory contains the documentation displayed in the Bahar Streamlit web a
 | File | Description | Lines | Used In |
 |------|-------------|-------|---------|
 | `overview.md` | About Bahar, features, getting started | 138 | Overview tab |
-| `emotions.md` | 28 emotion categories, groups, examples | 210 | Emotions tab |
-| `linguistic-dimensions.md` | Formality, tone, intensity, style | 450 | Linguistic Dimensions tab |
-| `api-usage.md` | Code examples, integration, best practices | 505 | API tab |
+| `emotions.md` | 28 emotion categories, groups, examples | 211 | Emotions tab |
+| `linguistic-dimensions.md` | Formality, tone, intensity, style | 451 | Linguistic Dimensions tab |
+| `advanced-analysis.md` | Advanced linguistic analysis guide | 550 | Advanced Analysis tab |
+| `model-management.md` | Model management and testing | 580 | Model Management tab |
+| `api-usage.md` | Code examples, integration, best practices | 506 | API tab |
 
-**Total:** 1,303 lines of documentation
+**Total:** 2,436 lines of documentation
 
 ## Usage
 
@@ -63,6 +65,29 @@ To update the documentation:
 - Examples for each dimension
 - Combined analysis examples
 - Use cases
+
+### advanced-analysis.md
+- Overview of advanced linguistic analysis
+- Four analyzer types (semantics, morphology, embeddings, discourse)
+- Key features and metrics for each analyzer
+- How to use the interface
+- Understanding metrics and scores
+- Use cases (research, content analysis, language learning)
+- Sample texts for testing
+- Tips and best practices
+- Technical details and performance
+
+### model-management.md
+- Universal model loader system
+- Adding models from HuggingFace Hub
+- Model inspection and capabilities
+- Editing model metadata and labels
+- Testing models with custom text
+- Model taxonomy types
+- Registry storage and management
+- Integration with analysis tabs
+- Use cases and best practices
+- Troubleshooting guide
 
 ### api-usage.md
 - Installation instructions

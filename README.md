@@ -40,6 +40,32 @@ This project is based on Google Research's [GoEmotions dataset](https://research
 
 ## Installation
 
+### Option 1: Docker (Recommended for Production)
+
+**Quick Start:**
+```bash
+# Development mode
+./docker-start.sh
+
+# Production mode with Nginx
+./docker-start.sh --prod
+
+# Access the app
+open http://localhost:8501  # Development
+open http://localhost        # Production
+```
+
+**Features:**
+- ✅ All dependencies pre-installed
+- ✅ Models cached in `volumes/` directory
+- ✅ Easy backup and migration
+- ✅ Production-ready with Nginx
+- ✅ Auto-restart on failure
+
+See [DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md) for complete documentation.
+
+### Option 2: Local Development
+
 1. Ensure Python 3.12 is installed (check `.python-version`)
 
 2. Create and activate virtual environment:

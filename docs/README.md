@@ -29,7 +29,11 @@ docs/
     ├── rich-output.md          # Rich library integration
     ├── migration.md            # Migration from old code
     ├── adding-datasets.md      # How to add new datasets
-    └── universal-model-loader.md # Universal model loader system
+    ├── universal-model-loader.md # Universal model loader system
+    ├── advanced-linguistic-analysis-plan.md # Academic research features roadmap
+    ├── dependency-installation-summary.md # Dependency installation complete
+    ├── phase1-foundation-complete.md # Phase 1 implementation summary
+    └── streamlit-advanced-analysis.md # Streamlit advanced analysis integration
 ```
 
 ## 🚀 Quick Links
@@ -54,6 +58,9 @@ docs/
 - [Linguistic Analysis](guides/linguistic-analysis.md) - Formality, tone, intensity, style
 - [Rich Output Guide](guides/rich-output.md) - Beautiful terminal formatting
 - [Adding New Datasets](guides/adding-datasets.md) - Extend with your own datasets
+- [Advanced Linguistic Analysis Plan](guides/advanced-linguistic-analysis-plan.md) - Academic research features roadmap
+- [Phase 1 Foundation Complete](guides/phase1-foundation-complete.md) - **NEW**: Phase 1 implementation summary
+- [Streamlit Advanced Analysis](guides/streamlit-advanced-analysis.md) - **NEW**: Advanced analysis UI integration
 
 ### API Reference
 - [API Overview](api/README.md) - API quick start and installation
