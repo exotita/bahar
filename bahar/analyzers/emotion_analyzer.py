@@ -59,6 +59,10 @@ class EmotionAnalyzer:
         if model_name is not None:
             # Explicit model name provided
             self._model_name = model_name
+        elif model_key and model_key.startswith("registry:"):
+            # Model from registry - extract model_id
+            registry_model_id = model_key.replace("registry:", "")
+            self._model_name = registry_model_id
         elif language is not None:
             # Language specified, get model for that language
             self._model_name = get_model_name(language, model_key)

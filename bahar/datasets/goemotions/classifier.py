@@ -9,16 +9,14 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import torch
-from transformers import (
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-)
+from transformers import AutoModelForSequenceClassification
 
 from bahar.datasets.goemotions.result import EmotionResult
 from bahar.datasets.goemotions.taxonomy import GOEMOTIONS_EMOTIONS
 from bahar.datasets.goemotions.model_adapters import (
     adapt_star_rating_model,
     adapt_binary_sentiment_model,
+    load_tokenizer_robust,
 )
 
 
@@ -48,23 +46,8 @@ class GoEmotionsClassifier:
 
     def load_model(self) -> None:
         """Load the model and tokenizer."""
-        # Try to load tokenizer, use slow tokenizer if fast fails
-        try:
-            self._tokenizer = AutoTokenizer.from_pretrained(
-                self.model_name, use_fast=True
-            )
-        except Exception:
-            # Fallback to slow tokenizer for models with tokenizer issues
-            try:
-                self._tokenizer = AutoTokenizer.from_pretrained(
-                    self.model_name, use_fast=False
-                )
-            except Exception as e:
-                # Last resort: try with trust_remote_code
-                print(f"Standard tokenizer loading failed: {e}")
-                self._tokenizer = AutoTokenizer.from_pretrained(
-                    self.model_name, use_fast=False, trust_remote_code=True
-                )
+        # Load tokenizer with robust fallback strategies
+        self._tokenizer = load_tokenizer_robust(self.model_name)
 
         self._model = AutoModelForSequenceClassification.from_pretrained(
             self.model_name
@@ -90,6 +73,10 @@ class GoEmotionsClassifier:
         """
         if self._model is None or self._tokenizer is None:
             self.load_model()
+
+        # Type assertions for linter
+        assert self._model is not None
+        assert self._tokenizer is not None
 
         # Check if this is a star rating model (5 labels)
         if hasattr(self._model.config, "num_labels") and self._model.config.num_labels == 5:

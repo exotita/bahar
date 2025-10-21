@@ -8,22 +8,28 @@ Welcome to the Bahar documentation! This directory contains comprehensive guides
 docs/
 ├── README.md                   # This file
 ├── DEVELOPMENT.md              # Complete development guide
+├── STREAMLIT_APP.md            # Streamlit application guide
+├── api/                        # API documentation
+│   ├── README.md               # API overview and quick start
+│   ├── core-api.md             # Core API reference
+│   └── streamlit-app.md        # Streamlit app documentation
+├── app/                        # Streamlit UI documentation
+│   ├── overview.md             # About, features, getting started
+│   ├── emotions.md             # Emotion categories and groups
+│   ├── linguistic-dimensions.md # Linguistic analysis details
+│   └── api-usage.md            # Code examples and integration
 ├── goemotions/                 # GoEmotions dataset documentation
 │   ├── README.md               # GoEmotions overview
 │   ├── taxonomy.md             # Emotion taxonomy details
-│   ├── usage.md                # Usage examples
-│   └── samples.md              # Sample texts documentation
-├── guides/                     # User guides
-│   ├── quick-start.md          # Quick start guide
-│   ├── installation.md         # Installation instructions
-│   ├── linguistic-analysis.md  # Linguistic analysis guide
-│   ├── rich-output.md          # Rich library integration
-│   ├── migration.md            # Migration from old code
-│   └── adding-datasets.md      # How to add new datasets
-└── api/                        # API documentation
-    ├── analyzers.md            # Analyzers API
-    ├── datasets.md             # Datasets API
-    └── cli.md                  # CLI tools documentation
+│   └── usage.md                # Usage examples
+└── guides/                     # User guides
+    ├── quick-start.md          # Quick start guide
+    ├── installation.md         # Installation instructions
+    ├── linguistic-analysis.md  # Linguistic analysis guide
+    ├── rich-output.md          # Rich library integration
+    ├── migration.md            # Migration from old code
+    ├── adding-datasets.md      # How to add new datasets
+    └── universal-model-loader.md # Universal model loader system
 ```
 
 ## 🚀 Quick Links
@@ -50,9 +56,15 @@ docs/
 - [Adding New Datasets](guides/adding-datasets.md) - Extend with your own datasets
 
 ### API Reference
-- [Analyzers API](api/analyzers.md) - EmotionAnalyzer, EnhancedAnalyzer, LinguisticAnalyzer
-- [Datasets API](api/datasets.md) - GoEmotions and future datasets
-- [CLI Tools](api/cli.md) - Command-line interface documentation
+- [API Overview](api/README.md) - API quick start and installation
+- [Core API](api/core-api.md) - EmotionAnalyzer, EnhancedAnalyzer, LinguisticAnalyzer
+- [Streamlit App API](api/streamlit-app.md) - Web application documentation
+
+### Streamlit Application
+- [App Overview](app/overview.md) - About Bahar, features, getting started
+- [Emotion Categories](app/emotions.md) - 28 emotions, groups, examples
+- [Linguistic Dimensions](app/linguistic-dimensions.md) - Formality, tone, intensity, style
+- [API Usage Examples](app/api-usage.md) - Code examples and integration
 
 ## 📖 Main Documentation
 

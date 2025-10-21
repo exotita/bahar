@@ -131,19 +131,41 @@ def get_model_name(language: str, model_key: str | None = None) -> str:
     return LANGUAGE_MODELS[language][model_key]
 
 
-def get_available_models(language: str) -> dict[str, str]:
+def get_available_models(language: str, include_registry: bool = True) -> dict[str, str]:
     """
     Get all available models for a language.
 
     Args:
         language: Language code
+        include_registry: If True, also include models from the Model Registry
 
     Returns:
-        Dictionary of model_key -> model_name
+        Dictionary of model_key -> model_name (display name)
     """
-    if language not in LANGUAGE_MODELS:
-        return {}
-    return LANGUAGE_MODELS[language].copy()
+    # Start with built-in models
+    models = {}
+    if language in LANGUAGE_MODELS:
+        models = LANGUAGE_MODELS[language].copy()
+
+    # Add models from registry if requested
+    if include_registry:
+        try:
+            from bahar.models.registry import ModelRegistry
+            registry = ModelRegistry()
+
+            # Get models that support this language
+            registry_models = registry.list_models(language=language)
+
+            for model_meta in registry_models:
+                # Use model name as the key (make it unique and readable)
+                # Format: "registry:model_id" to avoid conflicts with built-in models
+                model_key = f"registry:{model_meta.model_id}"
+                models[model_key] = model_meta.name
+        except Exception:
+            # If registry fails, just use built-in models
+            pass
+
+    return models
 
 
 def get_supported_languages() -> list[str]:
