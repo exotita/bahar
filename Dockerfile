@@ -64,6 +64,7 @@ RUN python -c "import nltk; \
     nltk.download('omw-1.4', download_dir='/app/cache/nltk_data'); \
     nltk.download('averaged_perceptron_tagger', download_dir='/app/cache/nltk_data'); \
     nltk.download('punkt', download_dir='/app/cache/nltk_data'); \
+    nltk.download('punkt_tab', download_dir='/app/cache/nltk_data'); \
     nltk.download('stopwords', download_dir='/app/cache/nltk_data'); \
     nltk.download('brown', download_dir='/app/cache/nltk_data'); \
     nltk.download('wordnet_ic', download_dir='/app/cache/nltk_data')"
